@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -11,136 +12,474 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lora:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; }
-        body { font-family: 'Lora', serif; background-color: #F5F3F0; -webkit-font-smoothing: antialiased; }
+        body { 
+            font-family: 'Quicksand', sans-serif; 
+            background: linear-gradient(135deg, #FFF5F0 0%, #F0F8F5 100%);
+            -webkit-font-smoothing: antialiased; 
+            background-attachment: fixed;
+        }
         #root { width: 100%; height: 100%; }
-    </style>
+
+```
+    @keyframes float { 
+        0%, 100% { transform: translateY(0px); } 
+        50% { transform: translateY(-8px); } 
+    }
+    @keyframes spin-slow { 
+        from { transform: rotate(0deg); } 
+        to { transform: rotate(360deg); } 
+    }
+    @keyframes bounce-pop { 
+        0% { transform: scale(0.8); opacity: 0; } 
+        60% { transform: scale(1.1); } 
+        100% { transform: scale(1); opacity: 1; } 
+    }
+    @keyframes jiggle { 
+        0%, 100% { transform: rotate(0deg); } 
+        25% { transform: rotate(-2deg); } 
+        75% { transform: rotate(2deg); } 
+    }
+</style>
+```
+
 </head>
 <body>
     <div id="root"></div>
-    <script type="text/babel">
-        const { useState, useEffect } = React;
-        const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
-        const colors = { pastGreen: '#A8D5BA', darkGreen: '#6B9F7F', terracotta: '#D4A5A5', darkTerracotta: '#9B6F6F', cream: '#F5F3F0', gold: '#D4AF37', darkGold: '#8B7D3A' };
-        const defaultChores = { Monday: ['Vacuum all floors & furniture (cat hair)', 'Brush cat to reduce shedding'], Tuesday: ['Bathroom clean (toilet, tub, sink)', 'Wipe down kitchen surfaces & appliances'], Wednesday: ['Change bed sheets', 'Wash cat bedding & pet blankets'], Thursday: ['Kitchen deep clean (stovetop, inside microwave)', 'Dust surfaces & baseboards'], Friday: ['Mop hard floors (cat litter tracks)', 'Empty & refresh litter box area'], Saturday: ['Laundry (clothes, towels, cleaning cloths)', 'Vacuum under furniture & cat-favorite spots'], Sunday: ['Weekly tidying & organizing', 'Check HVAC filters, replace if needed'] };
-        const defaultSelfCare = { 'Morning Skincare': ['Gentle cleanse', 'Apply Vitamin C serum', 'Moisturize', 'Sunscreen SPF 30+'], 'Evening Skincare': ['Cleanse face', 'Apply targeted treatment serum', 'Moisturize while damp', 'Keep phone away from bed'], 'Every Other Day': ['Dry brush body (upward strokes toward heart)', 'Shower with exfoliating body wash', 'Apply body lotion to damp skin'], 'Twice Weekly': ['Face mask (hydrating or chemical exfoliant)', 'Hair shampoo & conditioner', 'Hair mask (apply, leave 5-10 min)'], 'Weekly': ['Full body exfoliation (coffee scrub or body scrub)', 'Manicure/file nails', 'Pedicure/paint toenails', 'Hair oil treatment or serum', 'Gentle yoga or stretching'], 'As Needed': ['Shave legs/underarms/bikini area', 'Feminine hygiene care', 'Pluck/wax eyebrows', 'Makeup play/creative time'] };
-        function ChoreApp() {
-            const [chores, setChores] = useState(defaultChores);
-            const [selfCare, setSelfCare] = useState(defaultSelfCare);
-            const [completed, setCompleted] = useState({});
-            const [stats, setStats] = useState({ points: 0, streak: 0, level: 1 });
-            const [today, setToday] = useState(new Date().getDay() || 7);
-            const [customChore, setCustomChore] = useState('');
-            const [selectedDay, setSelectedDay] = useState(0);
-            const [selectedCategory, setSelectedCategory] = useState('Morning Skincare');
-            const [showAddModal, setShowAddModal] = useState(false);
-            const [activeTab, setActiveTab] = useState('chores');
-            const [showCelebration, setShowCelebration] = useState(false);
-            const [celebrationMsg, setCelebrationMsg] = useState('');
-            useEffect(() => {
-                const loadData = async () => {
-                    try {
-                        if (typeof localStorage !== 'undefined') {
-                            const choreData = localStorage.getItem('chores-routine');
-                            const selfCareData = localStorage.getItem('selfcare-routine');
-                            const completedData = localStorage.getItem('chores-completed');
-                            const statsData = localStorage.getItem('chores-stats');
-                            if (choreData) setChores(JSON.parse(choreData));
-                            if (selfCareData) setSelfCare(JSON.parse(selfCareData));
-                            if (completedData) setCompleted(JSON.parse(completedData));
-                            if (statsData) setStats(JSON.parse(statsData));
-                        }
-                    } catch (e) {}
-                };
-                loadData();
-            }, []);
-            const saveData = (newChores, newSelfCare, newCompleted, newStats) => {
+
+```
+<script type="text/babel">
+    const { useState, useEffect } = React;
+
+    const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+
+    const colors = {
+        pastGreen: '#A8D5BA',
+        darkGreen: '#6B9F7F',
+        terracotta: '#E8B4B8',
+        pink: '#F5B6D4',
+        cream: '#FFFBF7',
+        softYellow: '#FFE5B4',
+        softBlue: '#B4D7FF',
+        accent: '#FF9EBA'
+    };
+
+    const defaultChores = {
+        Monday: ['Vacuum all floors', 'Wipe down kitchen surfaces & appliances'],
+        Tuesday: ['Bathroom clean (toilet, tub, sink)', 'Dust surfaces'],
+        Wednesday: ['Change bed sheets', 'Clean shades/blinds'],
+        Thursday: ['Kitchen deep clean (stovetop, inside microwave)', 'Baseboard cleaning'],
+        Friday: ['Mop hard floors', 'Wipe mirrors & windows'],
+        Saturday: ['Organize & tidy spaces', 'Dust furniture'],
+        Sunday: ['Laundry (clothes, towels, cleaning cloths)', 'Weekly deep tidy']
+    };
+
+    const defaultSelfCare = {
+        'Morning Skincare': ['Gentle cleanse', 'Apply Vitamin C serum', 'Moisturize', 'Sunscreen SPF 30+'],
+        'Evening Skincare': ['Cleanse face', 'Apply targeted treatment serum', 'Moisturize while damp', 'Keep phone away from bed'],
+        'Every Other Day': ['Dry brush body (upward strokes toward heart)', 'Shower with exfoliating body wash', 'Apply body lotion to damp skin'],
+        'Twice Weekly': ['Face mask (hydrating or chemical exfoliant)', 'Hair shampoo & conditioner', 'Hair mask (apply, leave 5-10 min)'],
+        'Weekly': ['Full body exfoliation (coffee scrub or body scrub)', 'Manicure/file nails', 'Pedicure/paint toenails', 'Hair oil treatment or serum', 'Gentle yoga or stretching'],
+        'As Needed': ['Shave legs/underarms/bikini area', 'Feminine hygiene care', 'Pluck/wax eyebrows', 'Makeup play/creative time']
+    };
+
+    const emojis = ['✨', '🌿', '💚', '🧖‍♀️', '💅', '🛁', '🪴', '🌸', '💆‍♀️', '🌺'];
+
+    const Confetti = () => (
+        <div style={{position: 'fixed', inset: 0, pointerEvents: 'none', overflow: 'hidden'}}>
+            {[...Array(20)].map((_, i) => (
+                <div key={i} style={{position: 'absolute', left: `${Math.random() * 100}%`, top: '-10px', animation: `fall ${2 + Math.random()}s linear forwards`, opacity: Math.random() * 0.8, fontSize: '32px', animation: `fall ${2 + Math.random()}s linear forwards`}}>
+                    {emojis[Math.floor(Math.random() * emojis.length)]}
+                </div>
+            ))}
+            <style>{`@keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }`}</style>
+        </div>
+    );
+
+    function ChoreApp() {
+        const [chores, setChores] = useState(defaultChores);
+        const [selfCare, setSelfCare] = useState(defaultSelfCare);
+        const [completed, setCompleted] = useState({});
+        const [stats, setStats] = useState({ points: 0, streak: 0, level: 1 });
+        const [today, setToday] = useState(new Date().getDay() || 7);
+        const [customChore, setCustomChore] = useState('');
+        const [selectedDay, setSelectedDay] = useState(0);
+        const [selectedCategory, setSelectedCategory] = useState('Morning Skincare');
+        const [showAddModal, setShowAddModal] = useState(false);
+        const [activeTab, setActiveTab] = useState('chores');
+        const [showCelebration, setShowCelebration] = useState(false);
+        const [celebrationMsg, setCelebrationMsg] = useState('');
+
+        useEffect(() => {
+            const loadData = async () => {
                 try {
                     if (typeof localStorage !== 'undefined') {
-                        localStorage.setItem('chores-routine', JSON.stringify(newChores));
-                        localStorage.setItem('selfcare-routine', JSON.stringify(newSelfCare));
-                        localStorage.setItem('chores-completed', JSON.stringify(newCompleted));
-                        localStorage.setItem('chores-stats', JSON.stringify(newStats));
+                        const choreData = localStorage.getItem('chores-routine');
+                        const selfCareData = localStorage.getItem('selfcare-routine');
+                        const completedData = localStorage.getItem('chores-completed');
+                        const statsData = localStorage.getItem('chores-stats');
+                        if (choreData) setChores(JSON.parse(choreData));
+                        if (selfCareData) setSelfCare(JSON.parse(selfCareData));
+                        if (completedData) setCompleted(JSON.parse(completedData));
+                        if (statsData) setStats(JSON.parse(statsData));
                     }
                 } catch (e) {}
             };
-            const getTodayKey = () => {
-                const date = new Date();
-                return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
-            };
-            const celebrate = (message) => {
-                setCelebrationMsg(message);
-                setShowCelebration(true);
-                setTimeout(() => setShowCelebration(false), 2000);
-            };
-            const toggleChore = (dayOrCategory, choreIndex, isChore = true) => {
-                const key = `${dayOrCategory}-${choreIndex}-${getTodayKey()}`;
-                const newCompleted = { ...completed, [key]: !completed[key] };
-                const items = isChore ? chores[dayOrCategory] : selfCare[dayOrCategory];
-                const completedCount = items.filter((_, i) => newCompleted[`${dayOrCategory}-${i}-${getTodayKey()}`]).length;
-                let newStats = { ...stats };
-                if (completedCount === items.length && !completed[key]) {
-                    newStats.points += 50;
-                    newStats.streak += 1;
-                    if (newStats.streak % 7 === 0) newStats.level += 1;
-                    celebrate(`🎉 All done! +50 points!`);
-                } else if (completed[key] && completedCount < items.length) {
-                    newStats.points = Math.max(0, newStats.points - 10);
+            loadData();
+        }, []);
+
+        const saveData = (newChores, newSelfCare, newCompleted, newStats) => {
+            try {
+                if (typeof localStorage !== 'undefined') {
+                    localStorage.setItem('chores-routine', JSON.stringify(newChores));
+                    localStorage.setItem('selfcare-routine', JSON.stringify(newSelfCare));
+                    localStorage.setItem('chores-completed', JSON.stringify(newCompleted));
+                    localStorage.setItem('chores-stats', JSON.stringify(newStats));
                 }
-                setCompleted(newCompleted);
-                setStats(newStats);
-                saveData(chores, selfCare, newCompleted, newStats);
-            };
-            const addChore = (dayOrCategory, isChore = true) => {
-                if (customChore.trim()) {
-                    if (isChore) {
-                        const newChores = { ...chores, [dayOrCategory]: [...chores[dayOrCategory], customChore] };
-                        setChores(newChores);
-                        saveData(newChores, selfCare, completed, stats);
-                    } else {
-                        const newSelfCare = { ...selfCare, [dayOrCategory]: [...selfCare[dayOrCategory], customChore] };
-                        setSelfCare(newSelfCare);
-                        saveData(chores, newSelfCare, completed, stats);
-                    }
-                    setCustomChore('');
-                    setShowAddModal(false);
-                }
-            };
-            const removeChore = (dayOrCategory, index, isChore = true) => {
+            } catch (e) {}
+        };
+
+        const getTodayKey = () => {
+            const date = new Date();
+            return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`;
+        };
+
+        const celebrate = (message) => {
+            setCelebrationMsg(message);
+            setShowCelebration(true);
+            setTimeout(() => setShowCelebration(false), 2500);
+        };
+
+        const toggleChore = (dayOrCategory, choreIndex, isChore = true) => {
+            const key = `${dayOrCategory}-${choreIndex}-${getTodayKey()}`;
+            const newCompleted = { ...completed, [key]: !completed[key] };
+            const items = isChore ? chores[dayOrCategory] : selfCare[dayOrCategory];
+            const completedCount = items.filter((_, i) => newCompleted[`${dayOrCategory}-${i}-${getTodayKey()}`]).length;
+            let newStats = { ...stats };
+            if (completedCount === items.length && !completed[key]) {
+                newStats.points += 50;
+                newStats.streak += 1;
+                if (newStats.streak % 7 === 0) newStats.level += 1;
+                celebrate(`🎉 YES! +50 points!`);
+            } else if (completed[key] && completedCount < items.length) {
+                newStats.points = Math.max(0, newStats.points - 10);
+            }
+            setCompleted(newCompleted);
+            setStats(newStats);
+            saveData(chores, selfCare, newCompleted, newStats);
+        };
+
+        const addChore = (dayOrCategory, isChore = true) => {
+            if (customChore.trim()) {
                 if (isChore) {
-                    const newChores = { ...chores, [dayOrCategory]: chores[dayOrCategory].filter((_, i) => i !== index) };
+                    const newChores = { ...chores, [dayOrCategory]: [...chores[dayOrCategory], customChore] };
                     setChores(newChores);
                     saveData(newChores, selfCare, completed, stats);
                 } else {
-                    const newSelfCare = { ...selfCare, [dayOrCategory]: selfCare[dayOrCategory].filter((_, i) => i !== index) };
+                    const newSelfCare = { ...selfCare, [dayOrCategory]: [...selfCare[dayOrCategory], customChore] };
                     setSelfCare(newSelfCare);
                     saveData(chores, newSelfCare, completed, stats);
                 }
-            };
-            const resetStreak = () => {
-                const newStats = { ...stats, streak: 0 };
-                setStats(newStats);
-                saveData(chores, selfCare, completed, newStats);
-            };
-            const getTodayChores = () => {
-                const dayIndex = today - 1;
-                return days[dayIndex];
-            };
-            const getCurrentDayChores = (dayIndex) => {
-                const dayName = days[dayIndex];
-                return chores[dayName] || [];
-            };
-            const getCompletionCount = (dayOrCategory, isChore = true) => {
-                const items = isChore ? chores[dayOrCategory] : selfCare[dayOrCategory];
-                return items.filter((_, i) => completed[`${dayOrCategory}-${i}-${getTodayKey()}`]).length;
-            };
-            return <div style={{backgroundColor: colors.cream, minHeight: '100vh', paddingBottom: '40px'}}><style>{`.art-deco-border{position:relative;background:linear-gradient(135deg,${colors.pastGreen} 0%,${colors.terracotta} 100%)}.art-deco-border::before{content:'';position:absolute;inset:0;background:repeating-linear-gradient(45deg,transparent,transparent 10px,rgba(212,175,181,0.1) 10px,rgba(212,175,181,0.1) 20px),repeating-linear-gradient(-45deg,transparent,transparent 10px,rgba(168,213,186,0.1) 10px,rgba(168,213,186,0.1) 20px);pointer-events:none}.stat-box{position:relative;border:2px solid ${colors.darkGold};border-radius:2px}.stat-box::before{content:'';position:absolute;inset:-6px;border:1px solid ${colors.gold};opacity:0.5;border-radius:2px;pointer-events:none}.task-button{transition:all 0.3s cubic-bezier(0.34,1.56,0.64,1);position:relative;overflow:hidden;-webkit-user-select:none}.task-button.completed{animation:checkPulse 0.6s ease-out}@keyframes checkPulse{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}.title{font-family:'Playfair Display',serif;letter-spacing:2px}.tab-underline{position:relative;transition:all 0.3s ease}.tab-underline.active::after{content:'';position:absolute;bottom:-8px;left:0;right:0;height:3px;background:linear-gradient(90deg,${colors.pastGreen},${colors.terracotta})}`}</style><div className="art-deco-border" style={{padding:'32px 16px',color:'white'}}><div style={{marginBottom:'24px'}}><h1 className="title" style={{fontSize:'40px',fontWeight:'bold',marginBottom:'4px'}}>Sanctuary</h1><p style={{fontSize:'12px',opacity:0.9}}>Your wellness ritual</p></div><div style={{display:'grid',gridTemplateColumns:'repeat(4, 1fr)',gap:'12px'}}><div className="stat-box" style={{backgroundColor:'rgba(255,255,255,0.1)',backdropFilter:'blur(4px)',borderRadius:'2px',padding:'16px'}}><div style={{fontSize:'10px',letterSpacing:'1px',opacity:0.8,marginBottom:'8px'}}>STREAK</div><div style={{fontSize:'24px',fontWeight:'bold'}}>{stats.streak}</div><div style={{fontSize:'10px',marginTop:'4px',opacity:0.7}}>days</div></div><div className="stat-box" style={{backgroundColor:'rgba(255,255,255,0.1)',backdropFilter:'blur(4px)',borderRadius:'2px',padding:'16px'}}><div style={{fontSize:'10px',letterSpacing:'1px',opacity:0.8,marginBottom:'8px'}}>LEVEL</div><div style={{fontSize:'24px',fontWeight:'bold'}}>{stats.level}</div><div style={{fontSize:'10px',marginTop:'4px',opacity:0.7}}>unlocked</div></div><button onClick={resetStreak} style={{backgroundColor:'rgba(255,255,255,0.1)',backdropFilter:'blur(4px)',border:`2px solid ${colors.darkGold}`,borderRadius:'2px',padding:'16px',color:'white',textAlign:'left',cursor:'pointer',transition:'all 0.3s'}} onMouseEnter={(e)=>e.target.style.backgroundColor='rgba(255,255,255,0.2)'} onMouseLeave={(e)=>e.target.style.backgroundColor='rgba(255,255,255,0.1)'}><div style={{fontSize:'10px',letterSpacing:'1px',opacity:0.8,marginBottom:'8px'}}>RESET</div><div style={{fontSize:'12px',opacity:0.8}}>Click to reset</div></button><div className="stat-box" style={{backgroundColor:'rgba(255,255,255,0.1)',backdropFilter:'blur(4px)',borderRadius:'2px',padding:'16px',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'32px'}}>🌿</div></div><div style={{marginTop:'24px',fontSize:'32px',fontWeight:'bold',backgroundColor:'rgba(255,255,255,0.1)',padding:'16px',borderRadius:'2px',textAlign:'right'}}>{stats.points}</div></div><div style={{maxWidth:'1200px',margin:'0 auto',padding:'32px 16px'}}><div style={{display:'flex',gap:'32px',marginBottom:'32px',borderBottom:`2px solid ${colors.pastGreen}`,paddingBottom:'16px'}}><button onClick={()=>setActiveTab('chores')} className={`tab-underline ${activeTab==='chores'?'active':''}`} style={{background:'none',border:'none',fontSize:'18px',letterSpacing:'2px',fontFamily:"'Playfair Display', serif",fontWeight:'bold',cursor:'pointer',color:activeTab==='chores'?'#1f2937':'#9ca3af',transition:'all 0.3s'}}>HOME</button><button onClick={()=>setActiveTab('selfcare')} className={`tab-underline ${activeTab==='selfcare'?'active':''}`} style={{background:'none',border:'none',fontSize:'18px',letterSpacing:'2px',fontFamily:"'Playfair Display', serif",fontWeight:'bold',cursor:'pointer',color:activeTab==='selfcare'?'#1f2937':'#9ca3af',transition:'all 0.3s'}}>SELF-CARE</button></div>{activeTab==='chores'&&<><div style={{marginBottom:'32px',padding:'24px',borderRadius:'2px',backgroundColor:colors.pastGreen,color:'white'}}><div style={{display:'flex',alignItems:'center',gap:'8px',marginBottom:'12px'}}><span style={{fontSize:'20px'}}>✨</span><h2 className="title" style={{fontSize:'20px',letterSpacing:'1px'}}>Today: {getTodayChores()}</h2></div><div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'24px'}}>{getCurrentDayChores(today-1).map((chore,idx)=>{const key=`${getTodayChores()}-${idx}-${getTodayKey()}`;const isCompleted=completed[key];return <button key={idx} onClick={()=>toggleChore(getTodayChores(),idx)} className="task-button" style={{width:'100%',padding:'16px',borderRadius:'2px',fontWeight:'500',textAlign:'left',transition:'all 0.3s',backgroundColor:isCompleted?'rgba(255,255,255,0.2)':'rgba(255,255,255,0.2)',color:'white',border:'none',cursor:'pointer',textDecoration:isCompleted?'line-through':'none',opacity:isCompleted?0.6:1}}><div style={{display:'flex',alignItems:'center',gap:'12px'}}>{isCompleted?<span style={{fontSize:'18px'}}>✓</span>:<div style={{width:'20px',height:'20px',border:'2px solid white',borderRadius:'2px',display:'flex',alignItems:'center',justifyContent:'center',flexShrink:0}}/>}{chore}</div></button>})}</div><div style={{backgroundColor:'rgba(255,255,255,0.1)',padding:'12px',borderRadius:'2px'}}><div style={{width:'100%',backgroundColor:'rgba(255,255,255,0.3)',borderRadius:'9999px',height:'8px',overflow:'hidden',marginBottom:'8px'}}><div style={{height:'100%',transition:'all 0.3s duration-300',background:`linear-gradient(90deg,${colors.darkGreen},${colors.darkTerracotta})`,width:`${(getCompletionCount(getTodayChores())/Math.max(1,getCurrentDayChores(today-1).length))*100}%`}}/></div><p style={{fontSize:'12px',fontWeight:'500'}}>{getCompletionCount(getTodayChores())} of {getCurrentDayChores(today-1).length} complete</p></div></div><div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))',gap:'24px'}}>{days.map((day,dayIndex)=>{const dayChores=chores[day]||[];const completionCount=getCompletionCount(day);const isToday=dayIndex+1===today;return <div key={day} style={{borderRadius:'2px',padding:'24px',transition:'all 0.3s',border:`${isToday?4:2}px solid ${isToday?colors.gold:colors.pastGreen}`,backgroundColor:isToday?'white':colors.cream}}><div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px'}}><h3 className="title" style={{fontSize:'18px',color:colors.darkGreen}}>{day}</h3><div style={{fontSize:'12px',fontWeight:'bold',color:colors.darkTerracotta}}>{completionCount}/{dayChores.length}</div></div><div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'16px'}}>{dayChores.map((chore,idx)=>{const key=`${day}-${idx}-${getTodayKey()}`;const isCompleted=completed[key];return <div key={idx} style={{display:'flex',alignItems:'center',gap:'8px',group:true}}><button onClick={()=>toggleChore(day,idx)} className="task-button" style={{flex:1,textAlign:'left',padding:'8px',borderRadius:'2px',fontWeight:'500',fontSize:'12px',transition:'all 0.3s',backgroundColor:isCompleted?colors.cream:'white',color:isCompleted?'#9ca3af':'#1f2937',border:`3px solid ${isCompleted?colors.pastGreen:colors.terracotta}`,borderLeft:`3px solid ${isCompleted?colors.pastGreen:colors.terracotta}`,cursor:'pointer',textDecoration:isCompleted?'line-through':'none',opacity:isCompleted?0.5:1}}>{isCompleted?<span>✓ </span>:null}{chore}</button><button onClick={()=>removeChore(day,idx)} style={{opacity:0,fontWeight:'bold',transition:'opacity 0.3s',fontSize:'12px',padding:'4px',border:'none',backgroundColor:'transparent',color:colors.terracotta,cursor:'pointer'}} onMouseEnter={(e)=>e.target.parentElement.style.opacity='1'} onMouseLeave={(e)=>e.target.parentElement.style.opacity='0'}>✕</button></div>})}</div><button onClick={()=>{setSelectedDay(dayIndex);setShowAddModal(true)}} style={{width:'100%',padding:'8px 16px',borderRadius:'2px',fontWeight:'500',transition:'all 0.3s',backgroundColor:colors.pastGreen,color:'white',border:'none',cursor:'pointer',fontSize:'12px'}}>+ Add</button></div>})}</div></>}{activeTab==='selfcare'&&<><div style={{backgroundColor:'white',padding:'24px',borderRadius:'2px',marginBottom:'32px',borderLeft:`4px solid ${colors.terracotta}`}}><p style={{color:'#374151',fontSize:'14px',marginBottom:'8px',fontWeight:'600'}}>You deserve to feel confident, radiant, and in love with your body. 💕</p><p style={{color:'#4b5563',fontSize:'12px'}}>This routine is designed specifically for you — a 29-year-old woman building sustainable habits that make you feel amazing. Every step is an act of self-love. There's no perfection required, just showing up for yourself. You've got this.</p></div><div style={{display:'grid',gridTemplateColumns:'repeat(auto-fit, minmax(300px, 1fr))',gap:'24px'}}>{Object.keys(defaultSelfCare).map((category)=>{const categoryItems=selfCare[category]||[];const completionCount=getCompletionCount(category,false);return <div key={category} style={{borderRadius:'2px',padding:'24px',border:`2px solid ${colors.pastGreen}`,backgroundColor:'white'}}><div style={{display:'flex',justifyContent:'space-between',alignItems:'center',marginBottom:'16px'}}><h3 className="title" style={{fontSize:'18px',color:colors.darkGreen}}>{category}</h3><div style={{fontSize:'12px',fontWeight:'bold',color:colors.darkTerracotta}}>{completionCount}/{categoryItems.length}</div></div><div style={{display:'flex',flexDirection:'column',gap:'8px',marginBottom:'16px'}}>{categoryItems.map((item,idx)=>{const key=`${category}-${idx}-${getTodayKey()}`;const isCompleted=completed[key];return <div key={idx} style={{display:'flex',alignItems:'center',gap:'8px'}}><button onClick={()=>toggleChore(category,idx,false)} className="task-button" style={{flex:1,textAlign:'left',padding:'8px',borderRadius:'2px',fontWeight:'500',fontSize:'12px',transition:'all 0.3s',backgroundColor:isCompleted?colors.cream:'white',color:isCompleted?'#9ca3af':'#1f2937',border:`3px solid ${isCompleted?colors.pastGreen:colors.terracotta}`,borderLeft:`3px solid ${isCompleted?colors.pastGreen:colors.terracotta}`,cursor:'pointer',textDecoration:isCompleted?'line-through':'none',opacity:isCompleted?0.5:1}}>{isCompleted?<span>✓ </span>:null}{item}</button><button onClick={()=>removeChore(category,idx,false)} style={{opacity:0,fontWeight:'bold',transition:'opacity 0.3s',fontSize:'12px',padding:'4px',border:'none',backgroundColor:'transparent',color:colors.terracotta,cursor:'pointer'}} onMouseEnter={(e)=>e.target.parentElement.style.opacity='1'} onMouseLeave={(e)=>e.target.parentElement.style.opacity='0'}>✕</button></div>})}</div><button onClick={()=>{setSelectedCategory(category);setShowAddModal(true)}} style={{width:'100%',padding:'8px 16px',borderRadius:'2px',fontWeight:'500',transition:'all 0.3s',backgroundColor:colors.pastGreen,color:'white',border:'none',cursor:'pointer',fontSize:'12px'}}>+ Add</button></div>})}</div></>}{showAddModal&&<div style={{position:'fixed',inset:0,backgroundColor:'rgba(0,0,0,0.4)',display:'flex',alignItems:'center',justifyContent:'center',padding:'16px',zIndex:50}}><div style={{backgroundColor:'white',borderRadius:'2px',padding:'24px',maxWidth:'400px',width:'100%',boxShadow:'0 10px 25px rgba(0,0,0,0.1)',borderTop:`4px solid ${colors.pastGreen}`}}><h3 className="title" style={{fontSize:'18px',marginBottom:'16px',color:colors.darkGreen}}>{activeTab==='chores'?`Add task for ${days[selectedDay]}`:`Add to ${selectedCategory}`}</h3><input type="text" value={customChore} onChange={(e)=>setCustomChore(e.target.value)} onKeyPress={(e)=>{if(e.key==='Enter'){activeTab==='chores'?addChore(days[selectedDay],true):addChore(selectedCategory,false)}}} placeholder="Enter name..." style={{width:'100%',padding:'12px',border:`2px solid ${colors.pastGreen}`,borderRadius:'2px',marginBottom:'16px',backgroundColor:colors.cream,fontFamily:"'Lora', serif",fontSize:'14px'}} autoFocus/><div style={{display:'flex',gap:'12px'}}><button onClick={()=>{setShowAddModal(false);setCustomChore('')}} style={{flex:1,padding:'8px 16px',borderRadius:'2px',fontWeight:'500',transition:'all 0.3s',backgroundColor:colors.cream,color:colors.darkGreen,border:`2px solid ${colors.pastGreen}`,cursor:'pointer',fontSize:'12px'}}>Cancel</button><button onClick={()=>{activeTab==='chores'?addChore(days[selectedDay],true):addChore(selectedCategory,false)}} style={{flex:1,padding:'8px 16px',borderRadius:'2px',fontWeight:'500',transition:'all 0.3s',backgroundColor:colors.darkGreen,color:'white',border:'none',cursor:'pointer',fontSize:'12px'}}>Add</button></div></div></div>}{showCelebration&&<><div style={{position:'fixed',inset:0,pointerEvents:'none',overflow:'hidden'}}>{[...Array(12)].map((_, i) => (<div key={i} style={{position:'absolute',left:`${Math.random() * 100}%`,top:'-10px',animation:`fall ${2 + Math.random()}s linear forwards`,opacity:Math.random() * 0.7 + 0.3,fontSize:'24px'}}>{i % 3 === 0 ? '✨' : i % 3 === 1 ? '🌿' : '💚'}</div>))}<style>{`@keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }`}</style></div><div style={{position:'fixed',top:'32px',left:'50%',transform:'translateX(-50%)',zIndex:40,fontSize:'18px',fontWeight:'bold',color:colors.darkGreen,animation:'bounce 0.6s ease-in-out'}}>{celebrationMsg}</div><style>{`@keyframes bounce { 0%, 100% { transform: translateX(-50%) translateY(0); } 50% { transform: translateX(-50%) translateY(-20px); } }`}</style></>}</div></div>;
-        }
-        const root = ReactDOM.createRoot(document.getElementById('root'));
-        root.render(<ChoreApp />);
-    </script>
+                setCustomChore('');
+                setShowAddModal(false);
+            }
+        };
+
+        const removeChore = (dayOrCategory, index, isChore = true) => {
+            if (isChore) {
+                const newChores = { ...chores, [dayOrCategory]: chores[dayOrCategory].filter((_, i) => i !== index) };
+                setChores(newChores);
+                saveData(newChores, selfCare, completed, stats);
+            } else {
+                const newSelfCare = { ...selfCare, [dayOrCategory]: selfCare[dayOrCategory].filter((_, i) => i !== index) };
+                setSelfCare(newSelfCare);
+                saveData(chores, newSelfCare, completed, stats);
+            }
+        };
+
+        const resetStreak = () => {
+            const newStats = { ...stats, streak: 0 };
+            setStats(newStats);
+            saveData(chores, selfCare, completed, newStats);
+        };
+
+        const getTodayChores = () => {
+            const dayIndex = today - 1;
+            return days[dayIndex];
+        };
+
+        const getCurrentDayChores = (dayIndex) => {
+            const dayName = days[dayIndex];
+            return chores[dayName] || [];
+        };
+
+        const getCompletionCount = (dayOrCategory, isChore = true) => {
+            const items = isChore ? chores[dayOrCategory] : selfCare[dayOrCategory];
+            return items.filter((_, i) => completed[`${dayOrCategory}-${i}-${getTodayKey()}`]).length;
+        };
+
+        return (
+            <div style={{ backgroundColor: colors.cream, minHeight: '100vh', paddingBottom: '40px' }}>
+                <style>{`
+                    .bubbly-card {
+                        border-radius: 28px;
+                        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+                        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                    }
+                    .bubbly-card:hover {
+                        transform: translateY(-4px);
+                        box-shadow: 0 12px 32px rgba(0,0,0,0.12);
+                    }
+                    .bubbly-button {
+                        border-radius: 20px;
+                        border: none;
+                        font-family: 'Quicksand', sans-serif;
+                        font-weight: 600;
+                        cursor: pointer;
+                        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                    }
+                    .bubbly-button:active {
+                        animation: bounce-pop 0.4s ease-out;
+                    }
+                    .bubbly-button:hover {
+                        transform: translateY(-2px);
+                        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+                    }
+                    .stat-bubble {
+                        border-radius: 24px;
+                        padding: 20px;
+                        text-align: center;
+                        border: none;
+                        font-weight: 700;
+                    }
+                    .task-item {
+                        border-radius: 18px;
+                        padding: 14px;
+                        transition: all 0.2s ease;
+                        border: none;
+                        text-align: left;
+                        cursor: pointer;
+                        font-family: 'Quicksand', sans-serif;
+                    }
+                    .task-item:active {
+                        animation: jiggle 0.3s ease;
+                    }
+                    .title-font {
+                        font-family: 'Fredoka', sans-serif;
+                        font-weight: 700;
+                        letter-spacing: -0.5px;
+                    }
+                    .tab-btn {
+                        background: none;
+                        border: none;
+                        font-family: 'Fredoka', sans-serif;
+                        font-weight: 600;
+                        font-size: 16px;
+                        cursor: pointer;
+                        transition: all 0.3s;
+                        padding: 12px 20px;
+                        border-radius: 16px;
+                    }
+                    .tab-btn.active {
+                        background: white;
+                        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+                    }
+                `}</style>
+
+                {/* Header */}
+                <div style={{ background: `linear-gradient(135deg, ${colors.pastGreen} 0%, ${colors.pink} 100%)`, padding: '32px 20px 40px', borderRadius: '0 0 40px 40px', color: 'white', marginBottom: '24px' }}>
+                    <div style={{ maxWidth: '500px', margin: '0 auto' }}>
+                        <div style={{ marginBottom: '28px', textAlign: 'center' }}>
+                            <h1 className="title-font" style={{ fontSize: '48px', marginBottom: '6px' }}>Sanctuary ✨</h1>
+                            <p style={{ fontSize: '14px', opacity: 0.95, fontWeight: '500' }}>Your wellness ritual</p>
+                        </div>
+
+                        {/* Stats Grid */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '20px' }}>
+                            <div className="stat-bubble" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(10px)', borderRadius: '24px' }}>
+                                <div style={{ fontSize: '32px', marginBottom: '4px' }}>🔥</div>
+                                <div style={{ fontSize: '24px' }}>{stats.streak}</div>
+                                <div style={{ fontSize: '10px', marginTop: '2px', opacity: 0.8 }}>streak</div>
+                            </div>
+                            <div className="stat-bubble" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(10px)', borderRadius: '24px' }}>
+                                <div style={{ fontSize: '32px', marginBottom: '4px' }}>⭐</div>
+                                <div style={{ fontSize: '24px' }}>{stats.level}</div>
+                                <div style={{ fontSize: '10px', marginTop: '2px', opacity: 0.8 }}>level</div>
+                            </div>
+                            <div className="stat-bubble" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(10px)', borderRadius: '24px' }}>
+                                <div style={{ fontSize: '32px', marginBottom: '4px' }}>✨</div>
+                                <div style={{ fontSize: '24px' }}>{stats.points}</div>
+                                <div style={{ fontSize: '10px', marginTop: '2px', opacity: 0.8 }}>points</div>
+                            </div>
+                        </div>
+
+                        <button onClick={resetStreak} className="bubbly-button" style={{ width: '100%', padding: '14px', backgroundColor: 'rgba(255,255,255,0.2)', color: 'white', fontSize: '13px', fontWeight: '600' }}>
+                            Reset Streak
+                        </button>
+                    </div>
+                </div>
+
+                {/* Content */}
+                <div style={{ maxWidth: '500px', margin: '0 auto', padding: '0 16px' }}>
+                    {/* Tabs */}
+                    <div style={{ display: 'flex', gap: '12px', marginBottom: '28px', backgroundColor: 'rgba(255,255,255,0.4)', padding: '8px', borderRadius: '24px', backdropFilter: 'blur(10px)' }}>
+                        <button onClick={() => setActiveTab('chores')} className={`tab-btn ${activeTab === 'chores' ? 'active' : ''}`} style={{ flex: 1, color: activeTab === 'chores' ? colors.darkGreen : '#999' }}>
+                            🏠 Home
+                        </button>
+                        <button onClick={() => setActiveTab('selfcare')} className={`tab-btn ${activeTab === 'selfcare' ? 'active' : ''}`} style={{ flex: 1, color: activeTab === 'selfcare' ? colors.darkGreen : '#999' }}>
+                            💆 Self-Care
+                        </button>
+                    </div>
+
+                    {/* CHORES TAB */}
+                    {activeTab === 'chores' && (
+                        <>
+                            {/* Today's Card */}
+                            <div className="bubbly-card" style={{ backgroundColor: `linear-gradient(135deg, ${colors.pastGreen} 0%, ${colors.softBlue} 100%)`, padding: '28px', marginBottom: '28px', color: 'white' }}>
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+                                    <span style={{ fontSize: '28px', animation: 'float 3s ease-in-out infinite' }}>📅</span>
+                                    <h2 className="title-font" style={{ fontSize: '24px' }}>Today: {getTodayChores()}</h2>
+                                </div>
+                                
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
+                                    {getCurrentDayChores(today - 1).map((chore, idx) => {
+                                        const key = `${getTodayChores()}-${idx}-${getTodayKey()}`;
+                                        const isCompleted = completed[key];
+                                        return (
+                                            <button key={idx} onClick={() => toggleChore(getTodayChores(), idx)} className="task-item" style={{ width: '100%', backgroundColor: isCompleted ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.2)', color: 'white', textDecoration: isCompleted ? 'line-through' : 'none', opacity: isCompleted ? 0.7 : 1, fontSize: '15px', fontWeight: '500' }}>
+                                                <span style={{ fontSize: '18px', marginRight: '10px' }}>{isCompleted ? '✅' : '⭕'}</span>
+                                                {chore}
+                                            </button>
+                                        );
+                                    })}
+                                </div>
+
+                                {/* Progress */}
+                                <div>
+                                    <div style={{ width: '100%', backgroundColor: 'rgba(255,255,255,0.3)', borderRadius: '12px', height: '12px', overflow: 'hidden', marginBottom: '10px' }}>
+                                        <div style={{ height: '100%', background: 'rgba(255,255,255,0.8)', width: `${(getCompletionCount(getTodayChores()) / Math.max(1, getCurrentDayChores(today - 1).length)) * 100}%`, transition: 'width 0.3s ease' }} />
+                                    </div>
+                                    <p style={{ fontSize: '12px', opacity: 0.9, fontWeight: '500' }}>
+                                        {getCompletionCount(getTodayChores())} of {getCurrentDayChores(today - 1).length} done!
+                                    </p>
+                                </div>
+                            </div>
+
+                            {/* Week View */}
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '14px', marginBottom: '40px' }}>
+                                {days.map((day, dayIndex) => {
+                                    const dayChores = chores[day] || [];
+                                    const completionCount = getCompletionCount(day);
+                                    const isToday = dayIndex + 1 === today;
+                                    
+                                    return (
+                                        <div key={day} className="bubbly-card" style={{ padding: '18px', backgroundColor: isToday ? 'white' : colors.cream, border: isToday ? `3px solid ${colors.accent}` : 'none' }}>
+                                            <h3 className="title-font" style={{ fontSize: '14px', color: colors.darkGreen, marginBottom: '12px' }}>{day}</h3>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '12px' }}>
+                                                {dayChores.map((chore, idx) => {
+                                                    const key = `${day}-${idx}-${getTodayKey()}`;
+                                                    const isCompleted = completed[key];
+                                                    return (
+                                                        <button key={idx} onClick={() => toggleChore(day, idx)} className="task-item" style={{ width: '100%', backgroundColor: isCompleted ? colors.pastGreen : colors.softYellow, color: isCompleted ? 'white' : colors.darkGreen, fontSize: '12px', fontWeight: '500', textDecoration: isCompleted ? 'line-through' : 'none', opacity: isCompleted ? 0.6 : 1 }}>
+                                                            {isCompleted ? '✓' : '○'} {chore}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                            <button onClick={() => { setSelectedDay(dayIndex); setShowAddModal(true); }} className="bubbly-button" style={{ width: '100%', padding: '10px', backgroundColor: colors.pastGreen, color: 'white', fontSize: '12px' }}>
+                                                + Add
+                                            </button>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </>
+                    )}
+
+                    {/* SELF-CARE TAB */}
+                    {activeTab === 'selfcare' && (
+                        <>
+                            <div className="bubbly-card" style={{ backgroundColor: 'white', padding: '24px', marginBottom: '24px', borderLeft: `6px solid ${colors.terracotta}` }}>
+                                <p style={{ color: colors.darkGreen, fontSize: '14px', marginBottom: '10px', fontWeight: '600' }}>You deserve to feel confident, radiant, and in love with your body. 💕</p>
+                                <p style={{ color: '#666', fontSize: '12px' }}>Every step is an act of self-love. You've got this! ✨</p>
+                            </div>
+
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '14px', marginBottom: '40px' }}>
+                                {Object.keys(defaultSelfCare).map((category) => {
+                                    const categoryItems = selfCare[category] || [];
+                                    const completionCount = getCompletionCount(category, false);
+                                    const colors_array = [colors.pink, colors.softBlue, colors.softYellow, colors.terracotta, colors.pastGreen];
+                                    const bgColor = colors_array[Object.keys(defaultSelfCare).indexOf(category) % colors_array.length];
+                                    
+                                    return (
+                                        <div key={category} className="bubbly-card" style={{ backgroundColor: bgColor, padding: '20px', color: 'white' }}>
+                                            <h3 className="title-font" style={{ fontSize: '14px', marginBottom: '12px', opacity: 0.95 }}>{category}</h3>
+                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '12px' }}>
+                                                {categoryItems.map((item, idx) => {
+                                                    const key = `${category}-${idx}-${getTodayKey()}`;
+                                                    const isCompleted = completed[key];
+                                                    return (
+                                                        <button key={idx} onClick={() => toggleChore(category, idx, false)} className="task-item" style={{ width: '100%', backgroundColor: isCompleted ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.15)', color: 'white', fontSize: '11px', fontWeight: '500', textDecoration: isCompleted ? 'line-through' : 'none', opacity: isCompleted ? 0.6 : 1 }}>
+                                                            {isCompleted ? '✓' : '◉'} {item}
+                                                        </button>
+                                                    );
+                                                })}
+                                            </div>
+                                            <button onClick={() => { setSelectedCategory(category); setShowAddModal(true); }} className="bubbly-button" style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(255,255,255,0.25)', color: 'white', fontSize: '12px', border: '2px solid rgba(255,255,255,0.5)' }}>
+                                                + Add
+                                            </button>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </>
+                    )}
+                </div>
+
+                {/* Modal */}
+                {showAddModal && (
+                    <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: '20px', zIndex: 50 }}>
+                        <div className="bubbly-card" style={{ backgroundColor: 'white', padding: '28px', width: '100%', maxWidth: '400px', animation: 'bounce-pop 0.4s ease-out' }}>
+                            <h3 className="title-font" style={{ fontSize: '18px', marginBottom: '18px', color: colors.darkGreen }}>
+                                {activeTab === 'chores' ? `Add task for ${days[selectedDay]}` : `Add to ${selectedCategory}`}
+                            </h3>
+                            <input type="text" value={customChore} onChange={(e) => setCustomChore(e.target.value)} onKeyPress={(e) => { if (e.key === 'Enter') { activeTab === 'chores' ? addChore(days[selectedDay], true) : addChore(selectedCategory, false); } }} placeholder="Type here..." style={{ width: '100%', padding: '14px', border: `2px solid ${colors.pastGreen}`, borderRadius: '18px', marginBottom: '18px', fontFamily: "'Quicksand', sans-serif", fontSize: '14px', backgroundColor: colors.cream, boxSizing: 'border-box' }} autoFocus />
+                            <div style={{ display: 'flex', gap: '12px' }}>
+                                <button onClick={() => { setShowAddModal(false); setCustomChore(''); }} className="bubbly-button" style={{ flex: 1, padding: '12px', backgroundColor: colors.cream, color: colors.darkGreen, fontSize: '14px', border: `2px solid ${colors.pastGreen}` }}>
+                                    Cancel
+                                </button>
+                                <button onClick={() => { activeTab === 'chores' ? addChore(days[selectedDay], true) : addChore(selectedCategory, false); }} className="bubbly-button" style={{ flex: 1, padding: '12px', backgroundColor: colors.pastGreen, color: 'white', fontSize: '14px' }}>
+                                    Add ✨
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Celebration */}
+                {showCelebration && (
+                    <>
+                        <Confetti />
+                        <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 40, fontSize: '48px', animation: 'bounce-pop 0.5s ease-out', textAlign: 'center' }}>
+                            <div style={{ fontSize: '28px', marginBottom: '8px' }}>🎉</div>
+                            <div className="title-font" style={{ fontSize: '20px', color: colors.darkGreen, textShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+                                {celebrationMsg}
+                            </div>
+                        </div>
+                    </>
+                )}
+            </div>
+        );
+    }
+
+    const root = ReactDOM.createRoot(document.getElementById('root'));
+    root.render(<ChoreApp />);
+</script>
+```
+
 </body>
 </html>
