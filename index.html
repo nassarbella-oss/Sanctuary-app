@@ -12,40 +12,18 @@
     <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
     <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@babel/standalone/babel.min.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; }
         body { 
-            font-family: 'Quicksand', sans-serif; 
-            background: linear-gradient(135deg, #FFF5F0 0%, #F0F8F5 100%);
-            -webkit-font-smoothing: antialiased; 
-            background-attachment: fixed;
+            font-family: 'Inter', sans-serif; 
+            background: #F8F6F3;
+            -webkit-font-smoothing: antialiased;
+            color: #2C2C2C;
         }
         #root { width: 100%; height: 100%; }
-
-```
-    @keyframes float { 
-        0%, 100% { transform: translateY(0px); } 
-        50% { transform: translateY(-8px); } 
-    }
-    @keyframes spin-slow { 
-        from { transform: rotate(0deg); } 
-        to { transform: rotate(360deg); } 
-    }
-    @keyframes bounce-pop { 
-        0% { transform: scale(0.8); opacity: 0; } 
-        60% { transform: scale(1.1); } 
-        100% { transform: scale(1); opacity: 1; } 
-    }
-    @keyframes jiggle { 
-        0%, 100% { transform: rotate(0deg); } 
-        25% { transform: rotate(-2deg); } 
-        75% { transform: rotate(2deg); } 
-    }
-</style>
-```
-
+    </style>
 </head>
 <body>
     <div id="root"></div>
@@ -57,14 +35,15 @@
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
     const colors = {
-        pastGreen: '#A8D5BA',
-        darkGreen: '#6B9F7F',
-        terracotta: '#E8B4B8',
-        pink: '#F5B6D4',
-        cream: '#FFFBF7',
-        softYellow: '#FFE5B4',
-        softBlue: '#B4D7FF',
-        accent: '#FF9EBA'
+        darkGreen: '#5D8B7A',
+        lightGreen: '#A8D5BA',
+        terracotta: '#C9998E',
+        darkBg: '#2C2C2C',
+        lightBg: '#F8F6F3',
+        white: '#FFFFFF',
+        gray: '#6B6B6B',
+        darkGray: '#4A4A4A',
+        accentBorder: '#5D8B7A'
     };
 
     const defaultChores = {
@@ -85,19 +64,6 @@
         'Weekly': ['Full body exfoliation (coffee scrub or body scrub)', 'Manicure/file nails', 'Pedicure/paint toenails', 'Hair oil treatment or serum', 'Gentle yoga or stretching'],
         'As Needed': ['Shave legs/underarms/bikini area', 'Feminine hygiene care', 'Pluck/wax eyebrows', 'Makeup play/creative time']
     };
-
-    const emojis = ['✨', '🌿', '💚', '🧖‍♀️', '💅', '🛁', '🪴', '🌸', '💆‍♀️', '🌺'];
-
-    const Confetti = () => (
-        <div style={{position: 'fixed', inset: 0, pointerEvents: 'none', overflow: 'hidden'}}>
-            {[...Array(20)].map((_, i) => (
-                <div key={i} style={{position: 'absolute', left: `${Math.random() * 100}%`, top: '-10px', animation: `fall ${2 + Math.random()}s linear forwards`, opacity: Math.random() * 0.8, fontSize: '32px', animation: `fall ${2 + Math.random()}s linear forwards`}}>
-                    {emojis[Math.floor(Math.random() * emojis.length)]}
-                </div>
-            ))}
-            <style>{`@keyframes fall { to { transform: translateY(100vh) rotate(720deg); opacity: 0; } }`}</style>
-        </div>
-    );
 
     function ChoreApp() {
         const [chores, setChores] = useState(defaultChores);
@@ -150,7 +116,7 @@
         const celebrate = (message) => {
             setCelebrationMsg(message);
             setShowCelebration(true);
-            setTimeout(() => setShowCelebration(false), 2500);
+            setTimeout(() => setShowCelebration(false), 2000);
         };
 
         const toggleChore = (dayOrCategory, choreIndex, isChore = true) => {
@@ -163,7 +129,7 @@
                 newStats.points += 50;
                 newStats.streak += 1;
                 if (newStats.streak % 7 === 0) newStats.level += 1;
-                celebrate(`🎉 YES! +50 points!`);
+                celebrate(`Complete! +50 points`);
             } else if (completed[key] && completedCount < items.length) {
                 newStats.points = Math.max(0, newStats.points - 10);
             }
@@ -222,102 +188,32 @@
         };
 
         return (
-            <div style={{ backgroundColor: colors.cream, minHeight: '100vh', paddingBottom: '40px' }}>
-                <style>{`
-                    .bubbly-card {
-                        border-radius: 28px;
-                        box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-                        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-                    }
-                    .bubbly-card:hover {
-                        transform: translateY(-4px);
-                        box-shadow: 0 12px 32px rgba(0,0,0,0.12);
-                    }
-                    .bubbly-button {
-                        border-radius: 20px;
-                        border: none;
-                        font-family: 'Quicksand', sans-serif;
-                        font-weight: 600;
-                        cursor: pointer;
-                        transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-                    }
-                    .bubbly-button:active {
-                        animation: bounce-pop 0.4s ease-out;
-                    }
-                    .bubbly-button:hover {
-                        transform: translateY(-2px);
-                        box-shadow: 0 8px 20px rgba(0,0,0,0.12);
-                    }
-                    .stat-bubble {
-                        border-radius: 24px;
-                        padding: 20px;
-                        text-align: center;
-                        border: none;
-                        font-weight: 700;
-                    }
-                    .task-item {
-                        border-radius: 18px;
-                        padding: 14px;
-                        transition: all 0.2s ease;
-                        border: none;
-                        text-align: left;
-                        cursor: pointer;
-                        font-family: 'Quicksand', sans-serif;
-                    }
-                    .task-item:active {
-                        animation: jiggle 0.3s ease;
-                    }
-                    .title-font {
-                        font-family: 'Fredoka', sans-serif;
-                        font-weight: 700;
-                        letter-spacing: -0.5px;
-                    }
-                    .tab-btn {
-                        background: none;
-                        border: none;
-                        font-family: 'Fredoka', sans-serif;
-                        font-weight: 600;
-                        font-size: 16px;
-                        cursor: pointer;
-                        transition: all 0.3s;
-                        padding: 12px 20px;
-                        border-radius: 16px;
-                    }
-                    .tab-btn.active {
-                        background: white;
-                        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-                    }
-                `}</style>
-
+            <div style={{ backgroundColor: colors.lightBg, minHeight: '100vh', paddingBottom: '40px' }}>
                 {/* Header */}
-                <div style={{ background: `linear-gradient(135deg, ${colors.pastGreen} 0%, ${colors.pink} 100%)`, padding: '32px 20px 40px', borderRadius: '0 0 40px 40px', color: 'white', marginBottom: '24px' }}>
+                <div style={{ backgroundColor: colors.white, borderBottom: `2px solid ${colors.lightGreen}`, padding: '32px 20px', marginBottom: '32px' }}>
                     <div style={{ maxWidth: '500px', margin: '0 auto' }}>
-                        <div style={{ marginBottom: '28px', textAlign: 'center' }}>
-                            <h1 className="title-font" style={{ fontSize: '48px', marginBottom: '6px' }}>Sanctuary ✨</h1>
-                            <p style={{ fontSize: '14px', opacity: 0.95, fontWeight: '500' }}>Your wellness ritual</p>
+                        <div style={{ marginBottom: '28px' }}>
+                            <h1 style={{ fontFamily: "'Lora', serif", fontSize: '42px', fontWeight: '700', color: colors.darkGreen, marginBottom: '6px', letterSpacing: '-0.5px' }}>Sanctuary</h1>
+                            <p style={{ fontSize: '13px', color: colors.gray, fontWeight: '500', letterSpacing: '0.5px', textTransform: 'uppercase' }}>Wellness Routine</p>
                         </div>
 
-                        {/* Stats Grid */}
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '14px', marginBottom: '20px' }}>
-                            <div className="stat-bubble" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(10px)', borderRadius: '24px' }}>
-                                <div style={{ fontSize: '32px', marginBottom: '4px' }}>🔥</div>
-                                <div style={{ fontSize: '24px' }}>{stats.streak}</div>
-                                <div style={{ fontSize: '10px', marginTop: '2px', opacity: 0.8 }}>streak</div>
+                        {/* Stats Row */}
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+                            <div style={{ backgroundColor: colors.lightBg, padding: '16px', borderRadius: '8px', borderLeft: `4px solid ${colors.darkGreen}` }}>
+                                <div style={{ fontSize: '11px', color: colors.gray, fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>Streak</div>
+                                <div style={{ fontSize: '28px', fontWeight: '700', color: colors.darkGreen }}>{stats.streak}</div>
                             </div>
-                            <div className="stat-bubble" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(10px)', borderRadius: '24px' }}>
-                                <div style={{ fontSize: '32px', marginBottom: '4px' }}>⭐</div>
-                                <div style={{ fontSize: '24px' }}>{stats.level}</div>
-                                <div style={{ fontSize: '10px', marginTop: '2px', opacity: 0.8 }}>level</div>
+                            <div style={{ backgroundColor: colors.lightBg, padding: '16px', borderRadius: '8px', borderLeft: `4px solid ${colors.darkGreen}` }}>
+                                <div style={{ fontSize: '11px', color: colors.gray, fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>Level</div>
+                                <div style={{ fontSize: '28px', fontWeight: '700', color: colors.darkGreen }}>{stats.level}</div>
                             </div>
-                            <div className="stat-bubble" style={{ backgroundColor: 'rgba(255,255,255,0.25)', backdropFilter: 'blur(10px)', borderRadius: '24px' }}>
-                                <div style={{ fontSize: '32px', marginBottom: '4px' }}>✨</div>
-                                <div style={{ fontSize: '24px' }}>{stats.points}</div>
-                                <div style={{ fontSize: '10px', marginTop: '2px', opacity: 0.8 }}>points</div>
+                            <div style={{ backgroundColor: colors.lightBg, padding: '16px', borderRadius: '8px', borderLeft: `4px solid ${colors.darkGreen}` }}>
+                                <div style={{ fontSize: '11px', color: colors.gray, fontWeight: '600', textTransform: 'uppercase', letterSpacing: '0.5px', marginBottom: '8px' }}>Points</div>
+                                <div style={{ fontSize: '28px', fontWeight: '700', color: colors.darkGreen }}>{stats.points}</div>
                             </div>
                         </div>
 
-                        <button onClick={resetStreak} className="bubbly-button" style={{ width: '100%', padding: '14px', backgroundColor: 'rgba(255,255,255,0.2)', color: 'white', fontSize: '13px', fontWeight: '600' }}>
+                        <button onClick={resetStreak} style={{ width: '100%', marginTop: '16px', padding: '12px', backgroundColor: colors.lightBg, color: colors.darkGreen, border: `1px solid ${colors.lightGreen}`, borderRadius: '6px', fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }} onMouseEnter={(e) => { e.target.style.backgroundColor = colors.lightGreen; e.target.style.color = colors.white; }} onMouseLeave={(e) => { e.target.style.backgroundColor = colors.lightBg; e.target.style.color = colors.darkGreen; }}>
                             Reset Streak
                         </button>
                     </div>
@@ -326,12 +222,12 @@
                 {/* Content */}
                 <div style={{ maxWidth: '500px', margin: '0 auto', padding: '0 16px' }}>
                     {/* Tabs */}
-                    <div style={{ display: 'flex', gap: '12px', marginBottom: '28px', backgroundColor: 'rgba(255,255,255,0.4)', padding: '8px', borderRadius: '24px', backdropFilter: 'blur(10px)' }}>
-                        <button onClick={() => setActiveTab('chores')} className={`tab-btn ${activeTab === 'chores' ? 'active' : ''}`} style={{ flex: 1, color: activeTab === 'chores' ? colors.darkGreen : '#999' }}>
-                            🏠 Home
+                    <div style={{ display: 'flex', gap: '8px', marginBottom: '32px', borderBottom: `2px solid ${colors.lightGreen}`, paddingBottom: '0' }}>
+                        <button onClick={() => setActiveTab('chores')} style={{ padding: '14px 20px', backgroundColor: 'transparent', border: 'none', borderBottom: activeTab === 'chores' ? `3px solid ${colors.darkGreen}` : 'none', color: activeTab === 'chores' ? colors.darkGreen : colors.gray, fontFamily: "'Lora', serif", fontSize: '16px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }}>
+                            Home
                         </button>
-                        <button onClick={() => setActiveTab('selfcare')} className={`tab-btn ${activeTab === 'selfcare' ? 'active' : ''}`} style={{ flex: 1, color: activeTab === 'selfcare' ? colors.darkGreen : '#999' }}>
-                            💆 Self-Care
+                        <button onClick={() => setActiveTab('selfcare')} style={{ padding: '14px 20px', backgroundColor: 'transparent', border: 'none', borderBottom: activeTab === 'selfcare' ? `3px solid ${colors.darkGreen}` : 'none', color: activeTab === 'selfcare' ? colors.darkGreen : colors.gray, fontFamily: "'Lora', serif", fontSize: '16px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }}>
+                            Self-Care
                         </button>
                     </div>
 
@@ -339,19 +235,16 @@
                     {activeTab === 'chores' && (
                         <>
                             {/* Today's Card */}
-                            <div className="bubbly-card" style={{ backgroundColor: `linear-gradient(135deg, ${colors.pastGreen} 0%, ${colors.softBlue} 100%)`, padding: '28px', marginBottom: '28px', color: 'white' }}>
-                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
-                                    <span style={{ fontSize: '28px', animation: 'float 3s ease-in-out infinite' }}>📅</span>
-                                    <h2 className="title-font" style={{ fontSize: '24px' }}>Today: {getTodayChores()}</h2>
-                                </div>
+                            <div style={{ backgroundColor: colors.white, border: `2px solid ${colors.lightGreen}`, padding: '28px', borderRadius: '8px', marginBottom: '32px' }}>
+                                <h2 style={{ fontFamily: "'Lora', serif", fontSize: '20px', fontWeight: '700', color: colors.darkGreen, marginBottom: '20px', letterSpacing: '-0.3px' }}>Today: {getTodayChores()}</h2>
                                 
-                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '20px' }}>
+                                <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
                                     {getCurrentDayChores(today - 1).map((chore, idx) => {
                                         const key = `${getTodayChores()}-${idx}-${getTodayKey()}`;
                                         const isCompleted = completed[key];
                                         return (
-                                            <button key={idx} onClick={() => toggleChore(getTodayChores(), idx)} className="task-item" style={{ width: '100%', backgroundColor: isCompleted ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.2)', color: 'white', textDecoration: isCompleted ? 'line-through' : 'none', opacity: isCompleted ? 0.7 : 1, fontSize: '15px', fontWeight: '500' }}>
-                                                <span style={{ fontSize: '18px', marginRight: '10px' }}>{isCompleted ? '✅' : '⭕'}</span>
+                                            <button key={idx} onClick={() => toggleChore(getTodayChores(), idx)} style={{ width: '100%', padding: '14px', backgroundColor: isCompleted ? colors.lightBg : colors.white, border: `1px solid ${isCompleted ? colors.lightGreen : colors.lightGreen}`, borderRadius: '6px', textAlign: 'left', cursor: 'pointer', transition: 'all 0.2s', fontFamily: "'Inter', sans-serif", fontSize: '14px', fontWeight: '500', color: isCompleted ? colors.gray : colors.darkBg, textDecoration: isCompleted ? 'line-through' : 'none', opacity: isCompleted ? 0.6 : 1 }}>
+                                                <span style={{ marginRight: '8px' }}>{isCompleted ? '✓' : '○'}</span>
                                                 {chore}
                                             </button>
                                         );
@@ -360,37 +253,37 @@
 
                                 {/* Progress */}
                                 <div>
-                                    <div style={{ width: '100%', backgroundColor: 'rgba(255,255,255,0.3)', borderRadius: '12px', height: '12px', overflow: 'hidden', marginBottom: '10px' }}>
-                                        <div style={{ height: '100%', background: 'rgba(255,255,255,0.8)', width: `${(getCompletionCount(getTodayChores()) / Math.max(1, getCurrentDayChores(today - 1).length)) * 100}%`, transition: 'width 0.3s ease' }} />
+                                    <div style={{ width: '100%', backgroundColor: '#E8E8E8', borderRadius: '4px', height: '8px', overflow: 'hidden', marginBottom: '10px' }}>
+                                        <div style={{ height: '100%', backgroundColor: colors.darkGreen, width: `${(getCompletionCount(getTodayChores()) / Math.max(1, getCurrentDayChores(today - 1).length)) * 100}%`, transition: 'width 0.3s ease' }} />
                                     </div>
-                                    <p style={{ fontSize: '12px', opacity: 0.9, fontWeight: '500' }}>
-                                        {getCompletionCount(getTodayChores())} of {getCurrentDayChores(today - 1).length} done!
+                                    <p style={{ fontSize: '12px', color: colors.gray, fontWeight: '500' }}>
+                                        {getCompletionCount(getTodayChores())} of {getCurrentDayChores(today - 1).length} complete
                                     </p>
                                 </div>
                             </div>
 
                             {/* Week View */}
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))', gap: '14px', marginBottom: '40px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginBottom: '40px' }}>
                                 {days.map((day, dayIndex) => {
                                     const dayChores = chores[day] || [];
                                     const completionCount = getCompletionCount(day);
                                     const isToday = dayIndex + 1 === today;
                                     
                                     return (
-                                        <div key={day} className="bubbly-card" style={{ padding: '18px', backgroundColor: isToday ? 'white' : colors.cream, border: isToday ? `3px solid ${colors.accent}` : 'none' }}>
-                                            <h3 className="title-font" style={{ fontSize: '14px', color: colors.darkGreen, marginBottom: '12px' }}>{day}</h3>
+                                        <div key={day} style={{ backgroundColor: colors.white, border: isToday ? `2px solid ${colors.darkGreen}` : `1px solid #DDD`, padding: '16px', borderRadius: '8px', backgroundColor: isToday ? '#F0F5F3' : colors.white }}>
+                                            <h3 style={{ fontFamily: "'Lora', serif", fontSize: '13px', fontWeight: '700', color: colors.darkGreen, marginBottom: '12px', letterSpacing: '-0.2px' }}>{day}</h3>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '12px' }}>
                                                 {dayChores.map((chore, idx) => {
                                                     const key = `${day}-${idx}-${getTodayKey()}`;
                                                     const isCompleted = completed[key];
                                                     return (
-                                                        <button key={idx} onClick={() => toggleChore(day, idx)} className="task-item" style={{ width: '100%', backgroundColor: isCompleted ? colors.pastGreen : colors.softYellow, color: isCompleted ? 'white' : colors.darkGreen, fontSize: '12px', fontWeight: '500', textDecoration: isCompleted ? 'line-through' : 'none', opacity: isCompleted ? 0.6 : 1 }}>
+                                                        <button key={idx} onClick={() => toggleChore(day, idx)} style={{ width: '100%', padding: '8px', backgroundColor: isCompleted ? colors.lightGreen : colors.lightBg, color: isCompleted ? colors.white : colors.darkBg, border: 'none', borderRadius: '4px', fontSize: '11px', fontWeight: '500', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left', textDecoration: isCompleted ? 'line-through' : 'none', opacity: isCompleted ? 0.7 : 1 }}>
                                                             {isCompleted ? '✓' : '○'} {chore}
                                                         </button>
                                                     );
                                                 })}
                                             </div>
-                                            <button onClick={() => { setSelectedDay(dayIndex); setShowAddModal(true); }} className="bubbly-button" style={{ width: '100%', padding: '10px', backgroundColor: colors.pastGreen, color: 'white', fontSize: '12px' }}>
+                                            <button onClick={() => { setSelectedDay(dayIndex); setShowAddModal(true); }} style={{ width: '100%', padding: '8px', backgroundColor: colors.lightBg, color: colors.darkGreen, border: `1px solid ${colors.lightGreen}`, borderRadius: '4px', fontSize: '11px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }} onMouseEnter={(e) => { e.target.style.backgroundColor = colors.lightGreen; e.target.style.color = colors.white; }} onMouseLeave={(e) => { e.target.style.backgroundColor = colors.lightBg; e.target.style.color = colors.darkGreen; }}>
                                                 + Add
                                             </button>
                                         </div>
@@ -403,33 +296,31 @@
                     {/* SELF-CARE TAB */}
                     {activeTab === 'selfcare' && (
                         <>
-                            <div className="bubbly-card" style={{ backgroundColor: 'white', padding: '24px', marginBottom: '24px', borderLeft: `6px solid ${colors.terracotta}` }}>
-                                <p style={{ color: colors.darkGreen, fontSize: '14px', marginBottom: '10px', fontWeight: '600' }}>You deserve to feel confident, radiant, and in love with your body. 💕</p>
-                                <p style={{ color: '#666', fontSize: '12px' }}>Every step is an act of self-love. You've got this! ✨</p>
+                            <div style={{ backgroundColor: colors.white, border: `1px solid #DDD`, padding: '20px', borderRadius: '8px', marginBottom: '24px', borderLeft: `4px solid ${colors.terracotta}` }}>
+                                <p style={{ color: colors.darkGreen, fontSize: '13px', marginBottom: '8px', fontWeight: '600', fontFamily: "'Lora', serif" }}>You deserve to feel confident, radiant, and in love with your body.</p>
+                                <p style={{ color: colors.gray, fontSize: '12px' }}>Every step is an act of self-love. You've got this.</p>
                             </div>
 
-                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '14px', marginBottom: '40px' }}>
+                            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginBottom: '40px' }}>
                                 {Object.keys(defaultSelfCare).map((category) => {
                                     const categoryItems = selfCare[category] || [];
                                     const completionCount = getCompletionCount(category, false);
-                                    const colors_array = [colors.pink, colors.softBlue, colors.softYellow, colors.terracotta, colors.pastGreen];
-                                    const bgColor = colors_array[Object.keys(defaultSelfCare).indexOf(category) % colors_array.length];
                                     
                                     return (
-                                        <div key={category} className="bubbly-card" style={{ backgroundColor: bgColor, padding: '20px', color: 'white' }}>
-                                            <h3 className="title-font" style={{ fontSize: '14px', marginBottom: '12px', opacity: 0.95 }}>{category}</h3>
+                                        <div key={category} style={{ backgroundColor: colors.white, border: `1px solid #DDD`, padding: '16px', borderRadius: '8px' }}>
+                                            <h3 style={{ fontFamily: "'Lora', serif", fontSize: '12px', fontWeight: '700', color: colors.darkGreen, marginBottom: '12px', letterSpacing: '-0.2px' }}>{category}</h3>
                                             <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', marginBottom: '12px' }}>
                                                 {categoryItems.map((item, idx) => {
                                                     const key = `${category}-${idx}-${getTodayKey()}`;
                                                     const isCompleted = completed[key];
                                                     return (
-                                                        <button key={idx} onClick={() => toggleChore(category, idx, false)} className="task-item" style={{ width: '100%', backgroundColor: isCompleted ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.15)', color: 'white', fontSize: '11px', fontWeight: '500', textDecoration: isCompleted ? 'line-through' : 'none', opacity: isCompleted ? 0.6 : 1 }}>
-                                                            {isCompleted ? '✓' : '◉'} {item}
+                                                        <button key={idx} onClick={() => toggleChore(category, idx, false)} style={{ width: '100%', padding: '8px', backgroundColor: isCompleted ? colors.lightGreen : colors.lightBg, color: isCompleted ? colors.white : colors.darkBg, border: 'none', borderRadius: '4px', fontSize: '10px', fontWeight: '500', cursor: 'pointer', transition: 'all 0.2s', textAlign: 'left', textDecoration: isCompleted ? 'line-through' : 'none', opacity: isCompleted ? 0.7 : 1 }}>
+                                                            {isCompleted ? '✓' : '●'} {item}
                                                         </button>
                                                     );
                                                 })}
                                             </div>
-                                            <button onClick={() => { setSelectedCategory(category); setShowAddModal(true); }} className="bubbly-button" style={{ width: '100%', padding: '10px', backgroundColor: 'rgba(255,255,255,0.25)', color: 'white', fontSize: '12px', border: '2px solid rgba(255,255,255,0.5)' }}>
+                                            <button onClick={() => { setSelectedCategory(category); setShowAddModal(true); }} style={{ width: '100%', padding: '8px', backgroundColor: colors.lightBg, color: colors.darkGreen, border: `1px solid ${colors.lightGreen}`, borderRadius: '4px', fontSize: '11px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }} onMouseEnter={(e) => { e.target.style.backgroundColor = colors.lightGreen; e.target.style.color = colors.white; }} onMouseLeave={(e) => { e.target.style.backgroundColor = colors.lightBg; e.target.style.color = colors.darkGreen; }}>
                                                 + Add
                                             </button>
                                         </div>
@@ -442,18 +333,18 @@
 
                 {/* Modal */}
                 {showAddModal && (
-                    <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.3)', display: 'flex', alignItems: 'flex-end', justifyContent: 'center', padding: '20px', zIndex: 50 }}>
-                        <div className="bubbly-card" style={{ backgroundColor: 'white', padding: '28px', width: '100%', maxWidth: '400px', animation: 'bounce-pop 0.4s ease-out' }}>
-                            <h3 className="title-font" style={{ fontSize: '18px', marginBottom: '18px', color: colors.darkGreen }}>
+                    <div style={{ position: 'fixed', inset: 0, backgroundColor: 'rgba(0,0,0,0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '20px', zIndex: 50 }}>
+                        <div style={{ backgroundColor: colors.white, padding: '28px', width: '100%', maxWidth: '400px', borderRadius: '8px', border: `1px solid ${colors.lightGreen}` }}>
+                            <h3 style={{ fontFamily: "'Lora', serif", fontSize: '18px', fontWeight: '700', marginBottom: '20px', color: colors.darkGreen, letterSpacing: '-0.3px' }}>
                                 {activeTab === 'chores' ? `Add task for ${days[selectedDay]}` : `Add to ${selectedCategory}`}
                             </h3>
-                            <input type="text" value={customChore} onChange={(e) => setCustomChore(e.target.value)} onKeyPress={(e) => { if (e.key === 'Enter') { activeTab === 'chores' ? addChore(days[selectedDay], true) : addChore(selectedCategory, false); } }} placeholder="Type here..." style={{ width: '100%', padding: '14px', border: `2px solid ${colors.pastGreen}`, borderRadius: '18px', marginBottom: '18px', fontFamily: "'Quicksand', sans-serif", fontSize: '14px', backgroundColor: colors.cream, boxSizing: 'border-box' }} autoFocus />
+                            <input type="text" value={customChore} onChange={(e) => setCustomChore(e.target.value)} onKeyPress={(e) => { if (e.key === 'Enter') { activeTab === 'chores' ? addChore(days[selectedDay], true) : addChore(selectedCategory, false); } }} placeholder="Enter task name..." style={{ width: '100%', padding: '12px', border: `1px solid ${colors.lightGreen}`, borderRadius: '6px', marginBottom: '20px', fontFamily: "'Inter', sans-serif", fontSize: '14px', backgroundColor: colors.lightBg, boxSizing: 'border-box', color: colors.darkBg }} autoFocus />
                             <div style={{ display: 'flex', gap: '12px' }}>
-                                <button onClick={() => { setShowAddModal(false); setCustomChore(''); }} className="bubbly-button" style={{ flex: 1, padding: '12px', backgroundColor: colors.cream, color: colors.darkGreen, fontSize: '14px', border: `2px solid ${colors.pastGreen}` }}>
+                                <button onClick={() => { setShowAddModal(false); setCustomChore(''); }} style={{ flex: 1, padding: '12px', backgroundColor: colors.lightBg, color: colors.darkGreen, border: `1px solid ${colors.lightGreen}`, borderRadius: '6px', fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }} onMouseEnter={(e) => { e.target.style.backgroundColor = '#E8E8E8'; }} onMouseLeave={(e) => { e.target.style.backgroundColor = colors.lightBg; }}>
                                     Cancel
                                 </button>
-                                <button onClick={() => { activeTab === 'chores' ? addChore(days[selectedDay], true) : addChore(selectedCategory, false); }} className="bubbly-button" style={{ flex: 1, padding: '12px', backgroundColor: colors.pastGreen, color: 'white', fontSize: '14px' }}>
-                                    Add ✨
+                                <button onClick={() => { activeTab === 'chores' ? addChore(days[selectedDay], true) : addChore(selectedCategory, false); }} style={{ flex: 1, padding: '12px', backgroundColor: colors.darkGreen, color: colors.white, border: 'none', borderRadius: '6px', fontFamily: "'Inter', sans-serif", fontSize: '13px', fontWeight: '600', cursor: 'pointer', transition: 'all 0.2s' }} onMouseEnter={(e) => e.target.style.opacity = '0.9'} onMouseLeave={(e) => e.target.style.opacity = '1'}>
+                                    Add Task
                                 </button>
                             </div>
                         </div>
@@ -462,15 +353,11 @@
 
                 {/* Celebration */}
                 {showCelebration && (
-                    <>
-                        <Confetti />
-                        <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 40, fontSize: '48px', animation: 'bounce-pop 0.5s ease-out', textAlign: 'center' }}>
-                            <div style={{ fontSize: '28px', marginBottom: '8px' }}>🎉</div>
-                            <div className="title-font" style={{ fontSize: '20px', color: colors.darkGreen, textShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-                                {celebrationMsg}
-                            </div>
+                    <div style={{ position: 'fixed', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', zIndex: 40, backgroundColor: colors.white, padding: '32px', borderRadius: '8px', border: `2px solid ${colors.lightGreen}`, textAlign: 'center', boxShadow: '0 10px 40px rgba(0,0,0,0.15)' }}>
+                        <div style={{ fontFamily: "'Lora', serif", fontSize: '24px', fontWeight: '700', color: colors.darkGreen, letterSpacing: '-0.5px' }}>
+                            {celebrationMsg}
                         </div>
-                    </>
+                    </div>
                 )}
             </div>
         );
